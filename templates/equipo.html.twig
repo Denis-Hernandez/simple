@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Ingreso de Equipos</h1>
+<div class="p-4 mb-4 bg-light rounded-3">
+    {{form(form)}}
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th>Nombre de Equipo</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for equipo in equipos %}
+            <tr>
+                <td>{{equipo.nombre}} </td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

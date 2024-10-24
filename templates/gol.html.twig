@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Ingreso de Goles</h1>
+<div class="p-4 mb-4 bg-light rounded-3">
+    {{form(form)}}
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th>Jornada</th>
+                <th>Jugador</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for gol in goles %}
+            <tr>
+                <td> {{gol.jornada.equipo1.nombre}} vs {{gol.jornada.equipo2.nombre}} - {{gol.jornada.fecha | date("d/m/Y")}}</td>
+                <td> {{gol.usuario.nombre}}</td>
+                <td> {{gol.cantidad}} </td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

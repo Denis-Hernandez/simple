@@ -12,12 +12,13 @@
                 <th>Fecha Nacimiento</th>
                 <th>Nombres</th>
                 <th>Apellidos</th>
+                <th>Equipo</th>
             </tr>
         </thead>
         <tbody>
         {% for usuario in usuarios %}
             <tr>
-                <td>{{usuario.fechanac | date("d/m/Y")}} </td><td> {{usuario.nombre}} </td><td> {{usuario.apellido}}</td>
+                <td>{{usuario.fechanac | date("d/m/Y")}} </td><td> {{usuario.nombre}} </td><td> {{usuario.apellido}}</td><td> {{usuario.equipo.nombre}}</td>
             <tr>
         {% endfor %}
         </tbody>

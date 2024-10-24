@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Ingreso de Jornadas</h1>
+<div class="p-4 mb-4 bg-light rounded-3">
+    {{form(form)}}
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th>Fecha de Encuentro</th>
+                <th>Equipo 1</th>
+                <th>Equipo 2</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for jornada in jornadas %}
+            <tr>
+                <td>{{jornada.fecha | date("d/m/Y")}} </td><td> {{jornada.equipo1.nombre}} </td><td> {{jornada.equipo2.nombre}}</td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
