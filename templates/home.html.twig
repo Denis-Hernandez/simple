@@ -1,5 +1,26 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>Hola Mundo</h1>
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Ingreso de Jugadores</h1>
+<div class="p-4 mb-4 bg-light rounded-3">
+    {{form(form)}}
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th>Fecha Nacimiento</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for usuario in usuarios %}
+            <tr>
+                <td>{{usuario.fechanac | date("d/m/Y")}} </td><td> {{usuario.nombre}} </td><td> {{usuario.apellido}}</td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
