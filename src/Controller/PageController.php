@@ -14,6 +14,7 @@ use App\Form\JornadaType;
 use App\Form\IncidenteType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,13 +22,38 @@ use Symfony\Component\Routing\Annotation\Route;
 class PageController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function home(EntityManagerInterface $entityManager, Request $request): Response
+    public function home(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger): Response
     {
-        $form = $this->createForm(UsuarioType::class);
+        $usuario = new Usuario();
+        $form = $this->createForm(UsuarioType::class, $usuario);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            $entityManager->persist($form->getData());
+
+            $imagenFile = $form->get('imagen')->getData();
+
+            if ($imagenFile) {
+                $originalFilename = pathinfo($imagenFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // Limpiar el nombre para que sea seguro
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imagenFile->guessExtension();
+
+                try {
+                    // Mover el archivo a la carpeta de destino
+                    $imagenFile->move(
+                        $this->getParameter('imagenes_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Manejar el error de carga de archivo
+                    $this->addFlash('error', 'Error al subir la imagen.');
+                }
+
+                // Establecer el nombre de la imagen en la entidad
+                $usuario->setFoto($newFilename);
+            }
+
+            $entityManager->persist($usuario);
             $entityManager->flush();
 
             return $this->redirectToRoute('home');

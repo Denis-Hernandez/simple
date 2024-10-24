@@ -40,6 +40,9 @@ class Usuario
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Incidente::class, orphanRemoval: true)]
     private Collection $incidente;
 
+    #[ORM\Column(length: 255)]
+    private ?string $foto = null;
+
     public function __construct()
     {
         $this->gol = new ArrayCollection();
@@ -155,6 +158,18 @@ class Usuario
                 $incidente->setUsuario(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFoto(): ?string
+    {
+        return $this->foto;
+    }
+
+    public function setFoto(string $foto): static
+    {
+        $this->foto = $foto;
 
         return $this;
     }

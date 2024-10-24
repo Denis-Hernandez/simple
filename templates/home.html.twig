@@ -13,12 +13,23 @@
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Equipo</th>
+                <th>Foto</th>
             </tr>
         </thead>
         <tbody>
         {% for usuario in usuarios %}
             <tr>
-                <td>{{usuario.fechanac | date("d/m/Y")}} </td><td> {{usuario.nombre}} </td><td> {{usuario.apellido}}</td><td> {{usuario.equipo.nombre}}</td>
+                <td> {{usuario.fechanac | date("d/m/Y")}} </td>
+                <td> {{usuario.nombre}} </td>
+                <td> {{usuario.apellido}} </td>
+                <td> {{usuario.equipo.nombre}} </td>
+                <td>
+                    {% if usuario.foto %}
+                        <img src="{{ asset('uploads/imagenes/' ~ usuario.foto) }}" alt="{{ usuario.nombre }}" width="100">
+                    {% else %}
+                        Sin imagen
+                    {% endif %}
+                </td>
             <tr>
         {% endfor %}
         </tbody>
