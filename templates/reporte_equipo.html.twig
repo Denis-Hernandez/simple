@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Reporte de Equipos</h1>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th>Nombre de Equipo</th>
+                <th>Jugadores</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for equipo in equipos %}
+            <tr>
+                <td>{{equipo.nombre}} </td>
+                <td>
+                    <ul>
+                    {% for usuario in equipo.usuarios %}
+                    <li>
+                        {% if usuario.foto %}
+                            <img src="{{ asset('uploads/imagenes/' ~ usuario.foto) }}" alt="{{ usuario.nombre }}" width="100">
+                        {% endif %}
+                        {{usuario.nombre}} {{usuario.apellido}}
+                        <ul>
+                        {% for incidente in usuario.incidente %}
+                            {% for jornada1 in equipo.jornada1 %}
+                                {% if incidente.fechasuspencion >= jornada1.fecha and incidente.fechaincidente <= jornada1.fecha %}
+                                <li>Jornada {{jornada1.equipo1.nombre}} vs {{jornada1.equipo2.nombre}} - {{jornada1.fecha| date("d/m/Y")}} suspendido a {{incidente.fechasuspencion| date("d/m/Y")}} emitido el {{incidente.fechaincidente| date("d/m/Y")}}</li>
+                                {% endif %}
+                            {% endfor %}
+                            {% for jornada2 in equipo.jornada2 %}
+                                {% if incidente.fechasuspencion >= jornada2.fecha and incidente.fechaincidente <= jornada2.fecha %}
+                                <li>Jornada {{jornada2.equipo1.nombre}} vs {{jornada2.equipo2.nombre}} - {{jornada2.fecha| date("d/m/Y")}} suspendido a {{incidente.fechasuspencion| date("d/m/Y")}} emitido el {{incidente.fechaincidente| date("d/m/Y")}}</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

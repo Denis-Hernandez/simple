@@ -150,4 +150,15 @@ class PageController extends AbstractController
             'form'      => $form->createView()
         ]);
     }
+
+    #[Route('/reporte_equipo', name: 'reporte_equipo')]
+    public function reporte_equipo(EntityManagerInterface $entityManager, Request $request): Response
+    {
+
+        $equipos = $entityManager->getRepository(Equipo::class)->findAll();
+        return $this->render('reporte_equipo.html.twig',[
+            //'usuarios' => $entityManager->getRepository(Usuario::class)->findAll()
+            'equipos'  => $equipos
+        ]);
+    }
 }
