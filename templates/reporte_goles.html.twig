@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Reporte de Equipos</h1>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th>Nombre de Jugador</th>
+                <th>Equipo</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for usuario in usuarios %}
+            <tr>
+                <td>{{usuario.nombre}} </td>
+                <td>{{usuario.equipo.nombre}}</td>
+                <td>
+                    {% for gol in usuario.gol %}
+                    {{gol.cantidad}}
+                    {% endfor %}
+                </td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
