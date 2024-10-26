@@ -1,26 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Reporte de Equipos</h1>
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Reporte de Goles</h1>
 <div>
     <table class="table table-striped">
         <thead>
             <tr class="table-dark">
+                <th>Fotografía</th>
                 <th>Nombre de Jugador</th>
                 <th>Equipo</th>
+                <th>Total de Goles</th>
             </tr>
         </thead>
         <tbody>
         {% for usuario in usuarios %}
             <tr>
-                <td>{{usuario.nombre}} </td>
-                <td>{{usuario.equipo.nombre}}</td>
                 <td>
-                    {% for gol in usuario.gol %}
-                    {{gol.cantidad}}
-                    {% endfor %}
+                    {% if usuario.foto %}
+                        <img src="{{ asset('uploads/imagenes/' ~ usuario.foto) }}" alt="{{ usuario.nombre }}" width="100">
+                    {% endif %}
                 </td>
-            <tr>
+                <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                <td>{{ usuario.equipo.nombre }}</td>
+                <td>
+                    {% set total_goles = 0 %}
+                    {% for gol in usuario.gol %}
+                        {% set total_goles = total_goles + gol.cantidad %}
+                    {% endfor %}
+                    {{ total_goles }}
+                </td>
+            </tr>
         {% endfor %}
         </tbody>
     </table>

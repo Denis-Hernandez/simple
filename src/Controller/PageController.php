@@ -156,11 +156,12 @@ class PageController extends AbstractController
     {
 
         $equipos = $entityManager->getRepository(Equipo::class)->findAll();
-        return $this->render('reporte_equipo.html.twig',[
+        return $this->render('reporte_equipo.html.twig', [
             //'usuarios' => $entityManager->getRepository(Usuario::class)->findAll()
-            'equipos'  => $equipos
+            'equipos' => $equipos
         ]);
     }
+
 
     #[Route('/reporte_goles', name: 'reporte_goles')]
     public function reporte_usuarios_goles(EntityManagerInterface $entityManager, Request $request): Response
@@ -170,6 +171,37 @@ class PageController extends AbstractController
         return $this->render('reporte_goles.html.twig',[
             //'usuarios' => $entityManager->getRepository(Usuario::class)->findAll()
             'usuarios'  => $usuarios
+        ]);
+    }
+
+    #[Route('/reporte_incidentes', name: 'reporte_incidentes')]
+    public function reporte_usuarios_incidentes(EntityManagerInterface $entityManager, Request $request): Response
+    {
+
+        $usuarios = $entityManager->getRepository(Usuario::class)->findAll();
+        return $this->render('reporte_incidentes.html.twig',[
+            //'usuarios' => $entityManager->getRepository(Usuario::class)->findAll()
+            'usuarios'  => $usuarios
+        ]);
+    }
+
+    #[Route('/jugador', name: 'jugador')]
+    public function jugador(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $jugador = null;
+
+        // Si el formulario fue enviado, busca el jugador por el id especificado
+        if ($request->isMethod('POST')) {
+            $id = $request->request->get('jugador_id');
+            $jugador = $entityManager->getRepository(Usuario::class)->find($id);
+
+            if (!$jugador) {
+                $this->addFlash('error', 'El jugador no existe');
+            }
+        }
+
+        return $this->render('detalleJugador.html.twig', [
+            'jugador' => $jugador
         ]);
     }
 }

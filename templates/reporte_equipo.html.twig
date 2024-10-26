@@ -8,39 +8,67 @@
             <tr class="table-dark">
                 <th>Nombre de Equipo</th>
                 <th>Jugadores</th>
+                <th>Estado de Suspensión</th>
             </tr>
         </thead>
         <tbody>
         {% for equipo in equipos %}
             <tr>
-                <td>{{equipo.nombre}} </td>
+                <td>{{ equipo.nombre }}</td>
                 <td>
-                    <ul>
+                    <ul class="list-unstyled">
                     {% for usuario in equipo.usuarios %}
-                    <li>
-                        {% if usuario.foto %}
-                            <img src="{{ asset('uploads/imagenes/' ~ usuario.foto) }}" alt="{{ usuario.nombre }}" width="100">
-                        {% endif %}
-                        {{usuario.nombre}} {{usuario.apellido}}
-                        <ul>
-                        {% for incidente in usuario.incidente %}
-                            {% for jornada1 in equipo.jornada1 %}
-                                {% if incidente.fechasuspencion >= jornada1.fecha and incidente.fechaincidente <= jornada1.fecha %}
-                                <li>Jornada {{jornada1.equipo1.nombre}} vs {{jornada1.equipo2.nombre}} - {{jornada1.fecha| date("d/m/Y")}} suspendido a {{incidente.fechasuspencion| date("d/m/Y")}} emitido el {{incidente.fechaincidente| date("d/m/Y")}}</li>
-                                {% endif %}
-                            {% endfor %}
-                            {% for jornada2 in equipo.jornada2 %}
-                                {% if incidente.fechasuspencion >= jornada2.fecha and incidente.fechaincidente <= jornada2.fecha %}
-                                <li>Jornada {{jornada2.equipo1.nombre}} vs {{jornada2.equipo2.nombre}} - {{jornada2.fecha| date("d/m/Y")}} suspendido a {{incidente.fechasuspencion| date("d/m/Y")}} emitido el {{incidente.fechaincidente| date("d/m/Y")}}</li>
-                                {% endif %}
-                            {% endfor %}
-                        {% endfor %}
-                        </ul>
-                    </li>
+                        <li class="mb-2">  
+                            {% if usuario.foto %}
+                                <img src="{{ asset('uploads/imagenes/' ~ usuario.foto) }}" alt="{{ usuario.nombre }}" width="100">
+                            {% endif %}
+                            {{ usuario.nombre }} {{ usuario.apellido }}
+                        </li>
                     {% endfor %}
                     </ul>
                 </td>
-            <tr>
+                <td>
+                    <ul>
+                    {% for usuario in equipo.usuarios %}
+                        {% set suspendido = false %}
+                        {% set detallesSuspension = '' %}
+                        
+                        {% for incidente in usuario.incidente %}
+                            {% if incidente.tipo == 'roja' %}
+                                {% set suspendido = true %}
+                                {% set jornadaNombre = '' %}
+
+                                {% for jornada in equipo.jornada1 %}
+                                    {% if incidente.fechasuspencion >= jornada.fecha and incidente.fechaincidente <= jornada.fecha %}
+                                        {% set jornadaNombre = 'Jornada ' ~ jornada.equipo1.nombre ~ ' vs ' ~ jornada.equipo2.nombre ~ ' - ' ~ jornada.fecha|date("d/m/Y") %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if jornadaNombre == '' %} 
+                                    {% for jornada in equipo.jornada2 %}
+                                        {% if incidente.fechasuspencion >= jornada.fecha and incidente.fechaincidente <= jornada.fecha %}
+                                            {% set jornadaNombre = 'Jornada ' ~ jornada.equipo1.nombre ~ ' vs ' ~ jornada.equipo2.nombre ~ ' - ' ~ jornada.fecha|date("d/m/Y") %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                {% set detallesSuspension = 'Suspendido el ' ~ incidente.fechasuspencion|date("d/m/Y") ~ jornadaNombre %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <li>
+                            {{ usuario.nombre }}: 
+                            {% if suspendido %}
+                                <span class="text-danger">Suspendido</span><br>
+                                <small>{{ detallesSuspension }}</small>
+                            {% else %}
+                                <span class="text-success">No Suspendido</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
         {% endfor %}
         </tbody>
     </table>

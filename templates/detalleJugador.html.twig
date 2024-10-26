@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="display-2 py-3 mb-4 border-bottom text-center">Información del Jugador</h1>
+
+        <div class="row mb-4 p-4 bg-light rounded-3">
+            <div class="col-md-6">
+                <h2>Buscar Jugador</h2>
+                <form method="post" action="{{ path('jugador') }}" class="form-inline d-flex justify-content-between">
+                    <div class="form-group">
+                        <label for="jugador_id" class="form-label">ID del Jugador:</label>
+                        <input type="number" id="jugador_id" name="jugador_id" class="form-control" placeholder="Ingresa el ID" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+                </form>
+            </div>
+        </div>
+
+        {% if jugador %}
+            <div class="card mx-auto mb-5" style="width: 50%;">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Datos Generales</h2>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> {{ jugador.nombre }}</p>
+                    <p><strong>Apellido:</strong> {{ jugador.apellido }}</p>
+                    <p><strong>Fecha de Nacimiento:</strong> {{ jugador.fechaNac|date('Y-m-d') }}</p>
+                    <p><strong>Equipo:</strong> {{ jugador.equipo.nombre }}</p>
+                    <div class="text-center">
+                        <img src="{{ asset(jugador.foto) }}" alt="Foto del jugador" class="img-fluid rounded-circle" style="max-width: 150px;">
+                    </div>
+                </div>
+            </div>
+        {% elseif app.session.flashBag.has('error') %}
+            <div class="alert alert-danger text-center mt-4">
+                {{ app.session.flashBag.get('error')[0] }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 class='display-2 py-3 mb-4 border-bottom text-center'>Reporte de Incidentes por Equipo</h1>
+<div>
+    {% set equipos = {} %} 
+    
+    {% for usuario in usuarios %}
+        {% if usuario.equipo is not null %}
+            {% if not equipos[usuario.equipo.nombre] is defined %}
+                {% set equipos = equipos | merge({ (usuario.equipo.nombre): [] }) %}
+            {% endif %}
+            {% for incidente in usuario.incidente %}
+                {% set equipos = equipos | merge({ (usuario.equipo.nombre): equipos[usuario.equipo.nombre] | merge([{
+                    'jugador': usuario.nombre ~ ' ' ~ usuario.apellido,
+                    'tipo': incidente.tipo,
+                    'descripcion': incidente.descripcion,
+                    'fechaincidente': incidente.fechaincidente | date("d/m/Y"),
+                    'fechasuspencion': incidente.fechasuspencion is not null ? incidente.fechasuspencion | date("d/m/Y") : 'No Aplica'
+                }]) }) %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    {% for nombreEquipo, incidentes in equipos %}
+        <h2>{{ nombreEquipo }}</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr class="table-dark">
+                    <th>Nombre del Jugador</th>
+                    <th>Tipo de Incidente</th>
+                    <th>Descripción</th>
+                    <th>Fecha del Incidente</th>
+                    <th>Fecha de Suspensión</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for incidente in incidentes %}
+                <tr>
+                    <td>{{ incidente.jugador }}</td>
+                    <td>{{ incidente.tipo }}</td>
+                    <td>{{ incidente.descripcion }}</td>
+                    <td>{{ incidente.fechaincidente }}</td>
+                    <td>{{ incidente.fechasuspencion }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</div>
+{% endblock %}
