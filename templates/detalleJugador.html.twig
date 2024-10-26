@@ -28,7 +28,9 @@
                     <p><strong>Fecha de Nacimiento:</strong> {{ jugador.fechaNac|date('Y-m-d') }}</p>
                     <p><strong>Equipo:</strong> {{ jugador.equipo.nombre }}</p>
                     <div class="text-center">
-                        <img src="{{ asset(jugador.foto) }}" alt="Foto del jugador" class="img-fluid rounded-circle" style="max-width: 150px;">
+                        {% if jugador.foto %}
+                            <img src="{{ asset('uploads/imagenes/' ~ jugador.foto) }}" alt="{{ jugador.nombre }}" width="100">
+                        {% endif %}
                     </div>
                 </div>
             </div>
